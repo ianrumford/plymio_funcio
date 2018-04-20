@@ -1,21 +1,19 @@
-# PlymioFuncio
+# README
 
-**TODO: Add description**
+**plymio\_funcio**: Utility Functions
+
+**plymio\_funcio** offers a number of functions for common processing needs, espcially for enumerables.
+
+It is, specifically, a support package for the `Plymio` and `Harnais` Package Families.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `plymio_funcio` to your list of dependencies in `mix.exs`:
+Add **plymio\_funcio** to your list of dependencies in *mix.exs*:
 
-```elixir
-def deps do
-  [
-    {:plymio_funcio, "~> 0.1.0"}
-  ]
-end
-```
+    def deps do
+      [{:plymio_funcio, "~> 0.1.0"}]
+    end
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/plymio_funcio](https://hexdocs.pm/plymio_funcio).
+## Examples
 
+See the example in the [API Reference](<https://hexdocs.pm/plymio_funcio/readme.html>).

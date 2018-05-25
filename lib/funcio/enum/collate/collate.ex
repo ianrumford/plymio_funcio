@@ -55,14 +55,17 @@ defmodule Plymio.Funcio.Enum.Collate do
   def collate0_enum(enum) do
     try do
       enum
-      |> Enum.reduce_while([], fn value, values ->
-        value
-        |> case do
-          {:ok, value} -> {:cont, [value | values]}
-          {:error, %{__struct__: _}} = result -> {:halt, result}
-          value -> {:halt, new_argument_error_result(m: "pattern0 result invalid", v: value)}
+      |> Enum.reduce_while(
+        [],
+        fn value, values ->
+          value
+          |> case do
+            {:ok, value} -> {:cont, [value | values]}
+            {:error, %{__struct__: _}} = result -> {:halt, result}
+            value -> {:halt, new_argument_error_result(m: "pattern0 result invalid", v: value)}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         values -> {:ok, values |> Enum.reverse()}
@@ -105,14 +108,17 @@ defmodule Plymio.Funcio.Enum.Collate do
   def collate1_enum(enum) do
     try do
       enum
-      |> Enum.reduce_while([], fn value, values ->
-        value
-        |> case do
-          {:ok, value} -> {:cont, [value | values]}
-          {:error, %{__struct__: _}} = result -> {:halt, result}
-          value -> {:cont, [value | values]}
+      |> Enum.reduce_while(
+        [],
+        fn value, values ->
+          value
+          |> case do
+            {:ok, value} -> {:cont, [value | values]}
+            {:error, %{__struct__: _}} = result -> {:halt, result}
+            value -> {:cont, [value | values]}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         values -> {:ok, values |> Enum.reverse()}
@@ -167,15 +173,18 @@ defmodule Plymio.Funcio.Enum.Collate do
   def collate2_enum(enum) do
     try do
       enum
-      |> Enum.reduce_while([], fn value, values ->
-        value
-        |> case do
-          {:ok, value} -> {:cont, [value | values]}
-          {:error, %{__struct__: _}} = result -> {:halt, result}
-          value when is_value_unset_or_nil(value) -> {:cont, values}
-          value -> {:cont, [value | values]}
+      |> Enum.reduce_while(
+        [],
+        fn value, values ->
+          value
+          |> case do
+            {:ok, value} -> {:cont, [value | values]}
+            {:error, %{__struct__: _}} = result -> {:halt, result}
+            value when is_value_unset_or_nil(value) -> {:cont, values}
+            value -> {:cont, [value | values]}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         values -> {:ok, values |> Enum.reverse()}

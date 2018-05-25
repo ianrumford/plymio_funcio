@@ -92,8 +92,7 @@ defmodule Plymio.Funcio.Enum.Index do
   def normalise_index_range_enum(state, index_range) do
     with {:ok, indices} <- index_range |> normalise_index_range,
          {:ok, state} <- state |> enum_to_list,
-         {:ok, _} = result <- state |> validate_indices_enum(indices),
-         true <- true do
+         {:ok, _} = result <- state |> validate_indices_enum(indices) do
       result
     else
       {:error, %{__exception__: true}} = result -> result
@@ -203,17 +202,19 @@ defmodule Plymio.Funcio.Enum.Index do
 
   def validate_indices_enum(state, indices) when is_list(state) do
     with {:ok, state} <- state |> enum_to_list,
-         {:ok, indices} <- indices |> List.wrap() |> validate_indices,
-         true <- true do
+         {:ok, indices} <- indices |> List.wrap() |> validate_indices do
       indices
-      |> Enum.reduce({[], []}, fn index, {oks, errors} ->
-        state
-        |> validate_index_enum(index)
-        |> case do
-          {:ok, index} -> {[index | oks], errors}
-          {:error, %{__struct__: _}} -> {oks, [index | errors]}
+      |> Enum.reduce(
+        {[], []},
+        fn index, {oks, errors} ->
+          state
+          |> validate_index_enum(index)
+          |> case do
+            {:ok, index} -> {[index | oks], errors}
+            {:error, %{__struct__: _}} -> {oks, [index | errors]}
+          end
         end
-      end)
+      )
       |> case do
         # no invalid indices
         {indices, []} ->
@@ -275,8 +276,7 @@ defmodule Plymio.Funcio.Enum.Index do
 
   def create_predicate_index_range_enum(state, index_range) do
     with {:ok, range_indices} <- state |> normalise_index_range_enum(index_range),
-         {:ok, _fun} = result <- range_indices |> create_predicate_indices,
-         true <- true do
+         {:ok, _fun} = result <- range_indices |> create_predicate_indices do
       result
     else
       {:error, %{__exception__: true}} = result -> result

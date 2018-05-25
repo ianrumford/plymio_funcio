@@ -109,21 +109,24 @@ defmodule Plymio.Funcio.Enum.ValueAt do
          {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range) do
       state
       |> Stream.with_index()
-      |> Enum.reduce_while([], fn {value, index}, state ->
-        {value, index}
-        |> fun_pred.()
-        |> case do
-          x when x in [nil, false] ->
-            {:cont, state ++ List.wrap(value)}
+      |> Enum.reduce_while(
+        [],
+        fn {value, index}, state ->
+          {value, index}
+          |> fun_pred.()
+          |> case do
+            x when x in [nil, false] ->
+              {:cont, state ++ List.wrap(value)}
 
-          x when x in [true] ->
-            with {:ok, new_value} <- value |> fun_map.() do
-              {:cont, state ++ List.wrap(new_value)}
-            else
-              {:error, %{__struct__: _}} = result -> {:halt, result}
-            end
+            x when x in [true] ->
+              with {:ok, new_value} <- value |> fun_map.() do
+                {:cont, state ++ List.wrap(new_value)}
+              else
+                {:error, %{__struct__: _}} = result -> {:halt, result}
+              end
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         state when is_list(state) -> {:ok, state}
@@ -200,25 +203,27 @@ defmodule Plymio.Funcio.Enum.ValueAt do
   def map_with_index_value_at_enum(state, index_range, fun_map) do
     with {:ok, state} <- state |> enum_reify,
          {:ok, fun_map} <- [fun_map, &normalise1_result/1] |> reduce_map1_funs,
-         {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range),
-         true <- true do
+         {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range) do
       state
       |> Stream.with_index()
-      |> Enum.reduce_while([], fn {value, index}, state ->
-        {value, index}
-        |> fun_pred.()
-        |> case do
-          x when x in [nil, false] ->
-            {:cont, state ++ List.wrap(value)}
+      |> Enum.reduce_while(
+        [],
+        fn {value, index}, state ->
+          {value, index}
+          |> fun_pred.()
+          |> case do
+            x when x in [nil, false] ->
+              {:cont, state ++ List.wrap(value)}
 
-          x when x in [true] ->
-            with {:ok, new_value} <- {value, index} |> fun_map.() do
-              {:cont, state ++ List.wrap(new_value)}
-            else
-              {:error, %{__struct__: _}} = result -> {:halt, result}
-            end
+            x when x in [true] ->
+              with {:ok, new_value} <- {value, index} |> fun_map.() do
+                {:cont, state ++ List.wrap(new_value)}
+              else
+                {:error, %{__struct__: _}} = result -> {:halt, result}
+              end
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         state when is_list(state) -> {:ok, state}
@@ -313,21 +318,23 @@ defmodule Plymio.Funcio.Enum.ValueAt do
     with {:ok, state} <- state |> enum_reify,
          {:ok, fun_pred} when is_function(fun_pred, 1) <-
            state
-           |> create_predicate_index_range_enum(index_range),
-         true <- true do
+           |> create_predicate_index_range_enum(index_range) do
       state
       |> Stream.with_index()
-      |> Enum.reduce_while([], fn {value, index}, state ->
-        {value, index}
-        |> fun_pred.()
-        |> case do
-          x when x in [nil, false] ->
-            {:cont, state ++ List.wrap(value)}
+      |> Enum.reduce_while(
+        [],
+        fn {value, index}, state ->
+          {value, index}
+          |> fun_pred.()
+          |> case do
+            x when x in [nil, false] ->
+              {:cont, state ++ List.wrap(value)}
 
-          x when x in [true] ->
-            {:cont, state ++ entries ++ [value]}
+            x when x in [true] ->
+              {:cont, state ++ entries ++ [value]}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         state when is_list(state) -> {:ok, state}
@@ -390,23 +397,25 @@ defmodule Plymio.Funcio.Enum.ValueAt do
 
   def delete_value_at_enum(state, index_range) do
     with {:ok, state} <- state |> enum_reify,
-         {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range),
-         true <- true do
+         {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range) do
       state
       |> Stream.with_index()
-      |> Enum.reduce_while([], fn {value, index}, state ->
-        {value, index}
-        |> fun_pred.()
-        |> case do
-          # keep the value
-          x when x in [nil, false] ->
-            {:cont, state ++ List.wrap(value)}
+      |> Enum.reduce_while(
+        [],
+        fn {value, index}, state ->
+          {value, index}
+          |> fun_pred.()
+          |> case do
+            # keep the value
+            x when x in [nil, false] ->
+              {:cont, state ++ List.wrap(value)}
 
-          # drop the value
-          x when x in [true] ->
-            {:cont, state}
+            # drop the value
+            x when x in [true] ->
+              {:cont, state}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         state when is_list(state) -> {:ok, state}
@@ -483,21 +492,23 @@ defmodule Plymio.Funcio.Enum.ValueAt do
       end
 
     with {:ok, state} <- state |> enum_reify,
-         {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range),
-         true <- true do
+         {:ok, fun_pred} <- state |> create_predicate_index_range_enum(index_range) do
       state
       |> Stream.with_index()
-      |> Enum.reduce_while([], fn {value, index}, state ->
-        {value, index}
-        |> fun_pred.()
-        |> case do
-          x when x in [nil, false] ->
-            {:cont, state ++ List.wrap(value)}
+      |> Enum.reduce_while(
+        [],
+        fn {value, index}, state ->
+          {value, index}
+          |> fun_pred.()
+          |> case do
+            x when x in [nil, false] ->
+              {:cont, state ++ List.wrap(value)}
 
-          x when x in [true] ->
-            {:cont, state ++ entries}
+            x when x in [true] ->
+              {:cont, state ++ entries}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         state when is_list(state) -> {:ok, state}
@@ -632,17 +643,20 @@ defmodule Plymio.Funcio.Enum.ValueAt do
       state_map = state |> Stream.with_index() |> Map.new(fn {v, i} -> {i, v} end)
 
       range_indices
-      |> Enum.reduce([], fn index, values ->
-        state
-        |> validate_index_enum(index)
-        |> case do
-          {:ok, index} ->
-            [Map.get(state_map, index) | values]
+      |> Enum.reduce(
+        [],
+        fn index, values ->
+          state
+          |> validate_index_enum(index)
+          |> case do
+            {:ok, index} ->
+              [Map.get(state_map, index) | values]
 
-          {:error, %{__struct__: _}} ->
-            [default | values]
+            {:error, %{__struct__: _}} ->
+              [default | values]
+          end
         end
-      end)
+      )
       |> case do
         indices ->
           {:ok, indices |> Enum.reverse()}

@@ -66,14 +66,17 @@ defmodule Plymio.Funcio.Enum.Reduce do
       when is_function(fun, 2) do
     try do
       enum
-      |> Enum.reduce_while(init_acc, fn v, s ->
-        fun.(v, s)
-        |> case do
-          {:ok, s} -> {:cont, s}
-          {:error, %{__struct__: _}} = result -> {:halt, result}
-          v -> {:halt, new_error_result(m: "pattern0 result invalid", v: v)}
+      |> Enum.reduce_while(
+        init_acc,
+        fn v, s ->
+          fun.(v, s)
+          |> case do
+            {:ok, s} -> {:cont, s}
+            {:error, %{__struct__: _}} = result -> {:halt, result}
+            v -> {:halt, new_error_result(m: "pattern0 result invalid", v: v)}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         s -> {:ok, s}
@@ -131,14 +134,17 @@ defmodule Plymio.Funcio.Enum.Reduce do
       when is_function(fun, 2) do
     try do
       enum
-      |> Enum.reduce_while(init_acc, fn v, s ->
-        fun.(v, s)
-        |> case do
-          {:ok, s} -> {:cont, s}
-          {:error, %{__struct__: _}} = result -> {:halt, result}
-          s -> {:cont, s}
+      |> Enum.reduce_while(
+        init_acc,
+        fn v, s ->
+          fun.(v, s)
+          |> case do
+            {:ok, s} -> {:cont, s}
+            {:error, %{__struct__: _}} = result -> {:halt, result}
+            s -> {:cont, s}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         s -> {:ok, s}
@@ -217,15 +223,18 @@ defmodule Plymio.Funcio.Enum.Reduce do
       when is_function(fun, 2) do
     try do
       enum
-      |> Enum.reduce_while(init_acc, fn v, s ->
-        fun.(v, s)
-        |> case do
-          x when is_value_unset_or_nil(x) -> {:cont, s}
-          {:ok, s} -> {:cont, s}
-          {:error, %{__struct__: _}} = result -> {:halt, result}
-          s -> {:cont, s}
+      |> Enum.reduce_while(
+        init_acc,
+        fn v, s ->
+          fun.(v, s)
+          |> case do
+            x when is_value_unset_or_nil(x) -> {:cont, s}
+            {:ok, s} -> {:cont, s}
+            {:error, %{__struct__: _}} = result -> {:halt, result}
+            s -> {:cont, s}
+          end
         end
-      end)
+      )
       |> case do
         {:error, %{__exception__: true}} = result -> result
         s -> {:ok, s}

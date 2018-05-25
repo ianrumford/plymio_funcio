@@ -147,16 +147,14 @@ defmodule Plymio.Funcio.Enum.Map do
     with {:ok, opts} <- opts |> opts_normalise,
          {:ok, fun_map} <- fun |> reduce_or_passthru_map1_funs,
          {:ok, task_sup} <- opts |> opts_resolve_task_sup_pid,
-         {:ok, async_stream_opts} <- opts |> opts_resolve_task_sup_async_stream_opts,
-         true <- true do
+         {:ok, async_stream_opts} <- opts |> opts_resolve_task_sup_async_stream_opts do
       try do
         task_stream =
           task_sup
           |> Task.Supervisor.async_stream_nolink(enum, fun_map, async_stream_opts)
 
         with {:ok, _results} = result <- task_stream |> realise_task_stream_results,
-             {:ok, _} <- task_sup |> stop_task_supervisor,
-             true <- true do
+             {:ok, _} <- task_sup |> stop_task_supervisor do
           result
         else
           {:error, %{__exception__: true}} = result -> result
@@ -225,8 +223,7 @@ defmodule Plymio.Funcio.Enum.Map do
   def map_with_index_enum(derivable_list, mapper)
 
   def map_with_index_enum(state, mapper) do
-    with {:ok, fun} <- mapper |> reduce_map1_funs,
-         true <- true do
+    with {:ok, fun} <- mapper |> reduce_map1_funs do
       try do
         {:ok, state |> Stream.with_index() |> Stream.map(fun)}
       rescue
@@ -350,8 +347,7 @@ defmodule Plymio.Funcio.Enum.Map do
   defp opts_resolve_task_sup_pid(opts)
 
   defp opts_resolve_task_sup_pid(opts) do
-    with {:ok, opts} <- opts |> opts_validate,
-         true <- true do
+    with {:ok, opts} <- opts |> opts_validate do
       opts
       |> Keyword.has_key?(@plymio_funcio_key_task_sup_pid)
       |> case do
@@ -360,8 +356,7 @@ defmodule Plymio.Funcio.Enum.Map do
 
         _ ->
           with {:ok, sup_opts} <- opts |> opts_resolve_task_sup_start_link_opts,
-               {:ok, _sup_pid} = result <- sup_opts |> Task.Supervisor.start_link(),
-               true <- true do
+               {:ok, _sup_pid} = result <- sup_opts |> Task.Supervisor.start_link() do
             result
           else
             {:error, %{__exception__: true}} = result -> result
@@ -379,8 +374,7 @@ defmodule Plymio.Funcio.Enum.Map do
          defaults \\ @plymio_funcio_defaults_task_sup_start_link_opts
        ) do
     with {:ok, _sup_pid} = result <-
-           opts |> opts_get(@plymio_funcio_key_task_sup_start_link_opts, defaults),
-         true <- true do
+           opts |> opts_get(@plymio_funcio_key_task_sup_start_link_opts, defaults) do
       result
     else
       {:error, %{__exception__: true}} = result -> result
@@ -394,8 +388,7 @@ defmodule Plymio.Funcio.Enum.Map do
          defaults \\ @plymio_funcio_defaults_task_sup_async_stream_opts
        ) do
     with {:ok, _sup_pid} = result <-
-           opts |> opts_get(@plymio_funcio_key_task_sup_async_stream_opts, defaults),
-         true <- true do
+           opts |> opts_get(@plymio_funcio_key_task_sup_async_stream_opts, defaults) do
       result
     else
       {:error, %{__exception__: true}} = result -> result

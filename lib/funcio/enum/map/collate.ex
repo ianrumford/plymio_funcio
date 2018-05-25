@@ -87,20 +87,23 @@ defmodule Plymio.Funcio.Enum.Map.Collate do
     with {:ok, fun} <- fun |> reduce_map1_funs do
       try do
         enum
-        |> Enum.reduce_while([], fn value, values ->
-          value
-          |> fun.()
-          |> case do
-            {:error, %{__struct__: _}} = result ->
-              {:halt, result}
+        |> Enum.reduce_while(
+          [],
+          fn value, values ->
+            value
+            |> fun.()
+            |> case do
+              {:error, %{__struct__: _}} = result ->
+                {:halt, result}
 
-            {:ok, value} ->
-              {:cont, [value | values]}
+              {:ok, value} ->
+                {:cont, [value | values]}
 
-            value ->
-              {:halt, new_error_result(m: "pattern0 result invalid", v: value)}
+              value ->
+                {:halt, new_error_result(m: "pattern0 result invalid", v: value)}
+            end
           end
-        end)
+        )
         |> case do
           {:error, %{__exception__: true}} = result -> result
           values -> {:ok, values |> Enum.reverse()}
@@ -389,15 +392,18 @@ defmodule Plymio.Funcio.Enum.Map.Collate do
     with {:ok, fun} <- fun |> reduce_map1_funs do
       try do
         enum
-        |> Enum.reduce_while([], fn value, values ->
-          value
-          |> fun.()
-          |> case do
-            {:error, %{__struct__: _}} = result -> {:halt, result}
-            {:ok, value} -> {:cont, [value | values]}
-            value -> {:cont, [value | values]}
+        |> Enum.reduce_while(
+          [],
+          fn value, values ->
+            value
+            |> fun.()
+            |> case do
+              {:error, %{__struct__: _}} = result -> {:halt, result}
+              {:ok, value} -> {:cont, [value | values]}
+              value -> {:cont, [value | values]}
+            end
           end
-        end)
+        )
         |> case do
           {:error, %{__exception__: true}} = result -> result
           values -> {:ok, values |> Enum.reverse()}
@@ -529,16 +535,19 @@ defmodule Plymio.Funcio.Enum.Map.Collate do
     with {:ok, fun} <- fun |> reduce_map1_funs do
       try do
         enum
-        |> Enum.reduce_while([], fn value, values ->
-          value
-          |> fun.()
-          |> case do
-            x when is_value_unset_or_nil(x) -> {:cont, values}
-            {:error, %{__struct__: _}} = result -> {:halt, result}
-            {:ok, value} -> {:cont, [value | values]}
-            value -> {:cont, [value | values]}
+        |> Enum.reduce_while(
+          [],
+          fn value, values ->
+            value
+            |> fun.()
+            |> case do
+              x when is_value_unset_or_nil(x) -> {:cont, values}
+              {:error, %{__struct__: _}} = result -> {:halt, result}
+              {:ok, value} -> {:cont, [value | values]}
+              value -> {:cont, [value | values]}
+            end
           end
-        end)
+        )
         |> case do
           {:error, %{__exception__: true}} = result -> result
           values -> {:ok, values |> Enum.reverse()}

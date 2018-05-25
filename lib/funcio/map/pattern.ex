@@ -163,15 +163,18 @@ defmodule Plymio.Funcio.Map.Pattern do
     with {:ok, funs} <- funs |> normalise_map1_funs do
       fun = fn value ->
         funs
-        |> Enum.reduce_while(value, fn f, v ->
-          v
-          |> f.()
-          |> case do
-            {:error, %{__struct__: _}} = result -> {:halt, result}
-            {:ok, value} -> {:cont, value}
-            value -> {:cont, value}
+        |> Enum.reduce_while(
+          value,
+          fn f, v ->
+            v
+            |> f.()
+            |> case do
+              {:error, %{__struct__: _}} = result -> {:halt, result}
+              {:ok, value} -> {:cont, value}
+              value -> {:cont, value}
+            end
           end
-        end)
+        )
         |> case do
           {:error, %{__struct__: _}} = result -> result
           value -> {:ok, value}

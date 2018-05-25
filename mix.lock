@@ -3,5 +3,5 @@
   "earmark": {:hex, :earmark, "1.2.4", "99b637c62a4d65a20a9fb674b8cffb8baa771c04605a80c911c4418c69b75439", [:mix], []},
   "ex_doc": {:hex, :ex_doc, "0.18.3", "f4b0e4a2ec6f333dccf761838a4b253d75e11f714b85ae271c9ae361367897b7", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, optional: false]}]},
   "ex_docs": {:git, "https://github.com/elixir-lang/ex_doc", "29d7c4603bb0c64b0e647237ef34a4b1b8b33a4a", [branch: "master"]},
-  "plymio_fontais": {:hex, :plymio_fontais, "0.1.1", "27e9ab18fb513eab85f3771476de6dbd8d26880546c01c9f0ea70f06f35f035b", [:mix], []},
+  "plymio_fontais": {:hex, :plymio_fontais, "0.2.0", "fb82a3913a811d2da2364f293e55279a42737450729880c2ad5c3cd3b1bbd14b", [:mix], [], "hexpm"},
 }

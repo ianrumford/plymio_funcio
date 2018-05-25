@@ -75,24 +75,27 @@ defmodule Plymio.Funcio.Enum.Map.Gather do
     with {:ok, fun} <- [fun, &normalise0_result/1] |> reduce_map1_funs do
       try do
         enum
-        |> Enum.reduce_while({[], []}, fn element, {oks, errors} ->
-          element
-          |> fun.()
-          |> case do
-            {:error, %{__struct__: _} = error} ->
-              {:cont, {oks, [{element, error} | errors]}}
-
-            {:ok, value} ->
-              {:cont, {[{element, value} | oks], errors}}
-
-            value ->
-              with {:error, error} <- new_error_result(m: "pattern0 result invalid", v: value) do
+        |> Enum.reduce_while(
+          {[], []},
+          fn element, {oks, errors} ->
+            element
+            |> fun.()
+            |> case do
+              {:error, %{__struct__: _} = error} ->
                 {:cont, {oks, [{element, error} | errors]}}
-              else
-                {:error, %{__struct__: _}} = result -> {:halt, result}
-              end
+
+              {:ok, value} ->
+                {:cont, {[{element, value} | oks], errors}}
+
+              value ->
+                with {:error, error} <- new_error_result(m: "pattern0 result invalid", v: value) do
+                  {:cont, {oks, [{element, error} | errors]}}
+                else
+                  {:error, %{__struct__: _}} = result -> {:halt, result}
+                end
+            end
           end
-        end)
+        )
         |> case do
           {:error, %{__exception__: true}} = result -> result
           {oks, []} -> {:ok, [ok: oks |> Enum.reverse()]}
